@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Environment and secrets
+.env
+
+# Local data and generated outputs
+data/*
+!data/.gitkeep
+reports/*
+!reports/.gitkeep
+*.db
+*.sqlite
+*.sqlite3
+
+# Personal documents
+*.pdf
+*.docx
