@@ -7,14 +7,12 @@ import xml.etree.ElementTree as ET
 
 from .models import Job
 
-
 def clean_text(value: str) -> str:
     value = html.unescape(value)
     value = re.sub(r"<[^>]+>", " ", value)
     return " ".join(value.split())
 
-
-def fetch_jobs_from_rss(feed_url: str) -> list[dict[str, str]]:
+def fetch_jobs_from_rss(feed_url: str) -> list[Job]:
     request = urllib.request.Request(
         feed_url,
         headers={"User-Agent": "JobSearchAgent/0.1"},
@@ -24,7 +22,7 @@ def fetch_jobs_from_rss(feed_url: str) -> list[dict[str, str]]:
         xml_content = response.read()
 
     root = ET.fromstring(xml_content)
-    jobs = []
+    jobs: list[Job] = []
 
     for item in root.iter():
         fields = {
@@ -37,9 +35,7 @@ def fetch_jobs_from_rss(feed_url: str) -> list[dict[str, str]]:
         company = fields.get("company", "Unknown")
         location = fields.get("location", "Not specified")
         description = fields.get("description", "") or fields.get("summary", "")
-        posted_date = fields.get("pubdate", "") or fields.get(
-            "published", "Unknown"
-        )
+        posted_date = fields.get("pubdate", "") or fields.get("published", "Unknown")
 
         if title and url:
             jobs.append(
@@ -50,7 +46,7 @@ def fetch_jobs_from_rss(feed_url: str) -> list[dict[str, str]]:
                     url=url,
                     description=description,
                     posted_date=posted_date,
-                ).to_dict()
+                )
             )
 
     return jobs

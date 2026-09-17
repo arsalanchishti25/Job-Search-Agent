@@ -8,7 +8,11 @@ FEED_URL = "https://devitjobs.uk/job_feed.xml"
 
 def main() -> None:
     print("Fetching jobs...")
-    jobs = fetch_jobs_from_rss(FEED_URL)
+    try:
+        jobs = fetch_jobs_from_rss(FEED_URL)
+    except Exception as exc:
+        print(f"Failed to fetch jobs: {exc}")
+        return
 
     database = JobDatabase("data/jobs.db")
     new_jobs = database.add_jobs(jobs)
